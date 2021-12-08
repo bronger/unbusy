@@ -1,7 +1,6 @@
 #!/bin/sh
 
 printf %s "$LOAD_MAX" | grep -q "^[0-9]\+\(\\.[0-9]\+\)\?$" || exit 12
-printf %s "$START_JITTER_SEC" | grep -q "^[0-9]\+$" || exit 13
 
 if [ ! -z "$UPTIME_SEC_MAX" ]
 then
@@ -14,6 +13,10 @@ then
 fi
 
 waiting_sec=10
+
+jitter_sec=`awk "BEGIN{srand(); print int(rand()*($waiting_sec+1))}"` || exit 10
+sleep $jitter_sec || exit 11
+
 cycles_min=`expr "\$TIMEOUT_SEC_MIN" / $waiting_sec` || exit 2
 cycles_max=`expr "\$TIMEOUT_SEC_MAX" / $waiting_sec` || exit 3
 cycles_left=`awk -v min=$cycles_min -v max=$cycles_max 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'` || exit 4
@@ -24,6 +27,3 @@ do
     sleep 10 || exit 7
     cycles_left=`expr $cycles_left - 1` || exit 8
 done
-
-jitter_sec=`awk "BEGIN{srand(); print int(rand()*($START_JITTER_SEC+1))}"` || exit 10
-sleep $jitter_sec || exit 11
