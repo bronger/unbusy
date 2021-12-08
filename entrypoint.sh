@@ -25,5 +25,5 @@ do
     cycles_left=`expr $cycles_left - 1` || exit 8
 done
 
-jitter_sec=`awk "BEGIN{srand(); print int(rand()*($start_jitter_sec+1))}"` || exit 10
+jitter_sec=`awk "BEGIN{srand(); print int(rand()*($START_JITTER_SEC+1))}"` || exit 10
 sleep $jitter_sec || exit 11
