@@ -1,5 +1,6 @@
 #!/bin/sh
 
+printf %s "$LOAD_MAX" | grep -q "^[0-9]\+\(\\.[0-9]\+\)\?$" || exit 12
 printf %s "$START_JITTER_SEC" | grep -q "^[0-9]\+$" || exit 13
 
 waiting_sec=10
