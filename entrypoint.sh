@@ -3,6 +3,16 @@
 printf %s "$LOAD_MAX" | grep -q "^[0-9]\+\(\\.[0-9]\+\)\?$" || exit 12
 printf %s "$START_JITTER_SEC" | grep -q "^[0-9]\+$" || exit 13
 
+if [ ! -z "$UPTIME_SEC_MAX" ]
+then
+    printf %s "$UPTIME_SEC_MAX" | grep -q "^[0-9]\+$" || exit 14
+    too_old=`awk "{print (\\$1 > $UPTIME_SEC_MAX)}" /proc/uptime` || exit 15
+    if [ $too_old = 1 ]
+    then
+        exit 0
+    fi
+fi
+
 waiting_sec=10
 cycles_min=`expr "\$TIMEOUT_SEC_MIN" / $waiting_sec` || exit 2
 cycles_max=`expr "\$TIMEOUT_SEC_MAX" / $waiting_sec` || exit 3
